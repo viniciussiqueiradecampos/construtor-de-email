@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MBA - IA | Construtor</title>
   <link rel="stylesheet" href="/src/style.css" />
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 
 <body>
@@ -110,8 +111,16 @@
     <!-- Modals & Toasts -->
     <div id="loading-overlay" class="overlay" style="display:none;">
       <div class="loader-box">
-        <div class="spinner"></div>
-        <p id="loading-text">Salvando e publicando projeto...</p>
+        <div id="lottie-container" style="width: 120px; height: 120px; margin: 0 auto 20px;">
+          <lottie-player id="lottie-player" src="https://assets3.lottiefiles.com/packages/lf20_at6mdfkv.json"
+            background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></lottie-player>
+        </div>
+        <p id="loading-text" style="font-size: 20px; font-weight: 800; color: #1E293B;">Dando vida ao seu projeto...</p>
+        <div id="progress-bar-container"
+          style="width: 100%; height: 8px; background: #F1F5F9; border-radius: 10px; margin-top: 24px; overflow: hidden; display: none;">
+          <div id="progress-bar"
+            style="width: 0%; height: 100%; background: var(--color-brand); transition: width 0.3s ease;"></div>
+        </div>
       </div>
     </div>
 

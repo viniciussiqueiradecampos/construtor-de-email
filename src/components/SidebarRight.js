@@ -13,7 +13,13 @@ export function initSidebarRight() {
 
 function renderSidebarList(container, state) {
   const { components, selectedId } = state;
+
+  // Use a data attribute to prevent full re-render if we are just typing in an input
+  if (container.dataset.isTyping === 'true') return;
+
   container.innerHTML = '';
+
+  // ... rest of renderSidebarList logic
 
   // Header
   const header = document.createElement('div');
@@ -119,6 +125,13 @@ function createItem(comp, label, iconType, isDraggable, state) {
     };
 
     item.querySelectorAll('.prop-input').forEach(input => {
+      // Prevent sidebar re-render on focus
+      input.onfocus = () => { container.dataset.isTyping = 'true'; };
+      input.onblur = () => {
+        container.dataset.isTyping = 'false';
+        // After blur, we might want a final check but it's okay
+      };
+
       if (input.type === 'color') {
         input.oninput = (e) => {
           store.updateComponent(comp.id, { [e.target.dataset.key]: e.target.value });
@@ -127,6 +140,7 @@ function createItem(comp, label, iconType, isDraggable, state) {
         };
       } else {
         input.oninput = (e) => {
+          // Update store BUT render loop is skipped because of isTyping=true
           store.updateComponent(comp.id, { [e.target.dataset.key]: e.target.value });
         };
       }
@@ -163,6 +177,8 @@ function createItem(comp, label, iconType, isDraggable, state) {
     // Integration for brand name editing in styles
     const brandInput = item.querySelector('#brand-name-input');
     if (brandInput) {
+      brandInput.onfocus = () => { container.dataset.isTyping = 'true'; };
+      brandInput.onblur = () => { container.dataset.isTyping = 'false'; };
       brandInput.oninput = (e) => store.setBrandName(e.target.value);
     }
   }
@@ -240,6 +256,8 @@ function renderTemplateSelector(state) {
     });
     const brandInput = document.getElementById('brand-name-input');
     if (brandInput) {
+      brandInput.onfocus = () => { container.dataset.isTyping = 'true'; };
+      brandInput.onblur = () => { container.dataset.isTyping = 'false'; };
       brandInput.oninput = (e) => store.setBrandName(e.target.value);
     }
   }, 0);
@@ -290,6 +308,8 @@ function renderPrivacyEditor(state) {
   setTimeout(() => {
     const textarea = document.getElementById('privacy-policy-input');
     if (textarea) {
+      textarea.onfocus = () => { container.dataset.isTyping = 'true'; };
+      textarea.onblur = () => { container.dataset.isTyping = 'false'; };
       textarea.oninput = (e) => store.setPrivacyPolicy(e.target.value);
     }
   }, 0);

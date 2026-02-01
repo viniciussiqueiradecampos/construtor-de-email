@@ -55,23 +55,45 @@ function initTopBar() {
   const runSaveFlow = (isPublish = false) => {
     const overlay = document.getElementById('loading-overlay');
     const text = document.getElementById('loading-text');
+    const progressBarContainer = document.getElementById('progress-bar-container');
+    const progressBar = document.getElementById('progress-bar');
+    const lottiePlayer = document.getElementById('lottie-player');
+
     if (!overlay) return;
 
     overlay.style.display = 'flex';
-    text.textContent = isPublish ? 'Salvando e publicando projeto...' : 'Salvando alterações...';
+    progressBarContainer.style.display = 'block';
+    progressBar.style.width = '0%';
+    lottiePlayer.src = "https://assets3.lottiefiles.com/packages/lf20_at6mdfkv.json"; // Loading animation
 
-    setTimeout(() => {
-      overlay.style.display = 'none';
-      showToast(isPublish ? 'Projeto publicado com sucesso!' : 'Alterações salvas!');
+    text.textContent = isPublish ? 'Dando vida ao seu projeto...' : 'Salvando alterações...';
 
-      if (isPublish) {
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 15;
+      if (progress > 100) {
+        progress = 100;
+        clearInterval(interval);
+
+        // Success state
+        lottiePlayer.src = "https://assets9.lottiefiles.com/packages/lf20_pqnfmone.json"; // Success animation
+        text.textContent = isPublish ? 'Publicado' : 'Salvo com sucesso!';
+        progressBarContainer.style.display = 'none';
+
         setTimeout(() => {
-          window.location.href = '/projects.html';
-        }, 1200);
+          overlay.style.display = 'none';
+          if (isPublish) {
+            window.location.href = '/projects.html';
+          } else {
+            showToast('Projeto salvo com sucesso!');
+          }
+        }, 1500);
       }
-    }, 1800);
+      progressBar.style.width = `${progress}%`;
+    }, 200);
   };
 
+  if (saveBtn) saveBtn.onclick = () => runSaveFlow(false);
   if (publishBtn) publishBtn.onclick = () => runSaveFlow(true);
 
   const exitPreviewBtn = document.getElementById('btn-exit-preview');
