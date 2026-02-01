@@ -64,19 +64,21 @@ function initTopBar() {
     overlay.style.display = 'flex';
     progressBarContainer.style.display = 'block';
     progressBar.style.width = '0%';
-    lottiePlayer.src = "https://assets3.lottiefiles.com/packages/lf20_at6mdfkv.json"; // Loading animation
+
+    // Modern Lottie URLs
+    lottiePlayer.src = "https://lottie.host/68224d03-e83e-4b77-8025-06a9d187768e/vD6I5LghkR.json";
 
     text.textContent = isPublish ? 'Dando vida ao seu projeto...' : 'Salvando alterações...';
 
     let progress = 0;
     const interval = setInterval(() => {
-      progress += Math.random() * 15;
+      progress += Math.random() * 20;
       if (progress > 100) {
         progress = 100;
         clearInterval(interval);
 
         // Success state
-        lottiePlayer.src = "https://assets9.lottiefiles.com/packages/lf20_pqnfmone.json"; // Success animation
+        lottiePlayer.src = "https://lottie.host/07fb5880-60b6-4558-a968-3b3671236173/7H27rR1I5d.json";
         text.textContent = isPublish ? 'Publicado' : 'Salvo com sucesso!';
         progressBarContainer.style.display = 'none';
 
@@ -87,10 +89,10 @@ function initTopBar() {
           } else {
             showToast('Projeto salvo com sucesso!');
           }
-        }, 1500);
+        }, 1800);
       }
       progressBar.style.width = `${progress}%`;
-    }, 200);
+    }, 250);
   };
 
   if (saveBtn) saveBtn.onclick = () => runSaveFlow(false);

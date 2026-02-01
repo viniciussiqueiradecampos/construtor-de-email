@@ -19,8 +19,6 @@ function renderSidebarList(container, state) {
 
   container.innerHTML = '';
 
-  // ... rest of renderSidebarList logic
-
   // Header
   const header = document.createElement('div');
   header.style.display = 'flex';
@@ -103,13 +101,18 @@ function createItem(comp, label, iconType, isDraggable, state) {
         </div>
       </div>
       <div class="accordion-content">
-        <div class="properties-form">
-          ${renderContent(comp, label, state)}
-        </div>
+        <div class="properties-form"></div>
       </div>
     `;
 
-  // Events
+  const contentBody = item.querySelector('.properties-form');
+  const rendered = renderContent(comp, label, state);
+  if (typeof rendered === 'string') {
+    contentBody.innerHTML = rendered;
+  } else {
+    contentBody.innerHTML = '';
+    contentBody.appendChild(rendered);
+  }
   const header = item.querySelector('.accordion-header');
   header.onclick = (e) => {
     if (e.target.closest('.visibility-toggle')) return;
@@ -129,7 +132,8 @@ function createItem(comp, label, iconType, isDraggable, state) {
       input.onfocus = () => { container.dataset.isTyping = 'true'; };
       input.onblur = () => {
         container.dataset.isTyping = 'false';
-        // After blur, we might want a final check but it's okay
+        // Sync everything once typing stops
+        renderSidebarList(container, store.getState());
       };
 
       if (input.type === 'color') {
@@ -227,6 +231,7 @@ function renderContent(comp, label, state) {
 }
 
 function renderTemplateSelector(state) {
+  const container = document.createElement('div');
   const templates = [
     { id: 'moderno', name: 'Moderno', desc: 'Clean e sofisticado', bg: 'linear-gradient(135deg, #6366F1, #A855F7)' },
     { id: 'minimalista', name: 'Minimal', desc: 'Simples e direto', bg: '#1E293B' },
@@ -235,73 +240,58 @@ function renderTemplateSelector(state) {
     { id: 'tech', name: 'Tech', desc: 'Futurista e inovador', bg: 'linear-gradient(135deg, #0EA5E9, #2563EB)' }
   ];
 
-  setTimeout(() => {
-    const grid = document.getElementById('template-grid');
-    if (!grid) return;
-    templates.forEach(t => {
-      const card = grid.querySelector(`[data-id="${t.id}"]`);
-      if (card) {
-        card.onclick = (e) => {
-          e.stopPropagation();
-          store.setTemplate(t.id);
-        };
-      }
-    });
-    const themeToggles = document.querySelectorAll('.theme-toggle-btn');
-    themeToggles.forEach(btn => {
-      btn.onclick = (e) => {
-        e.stopPropagation();
-        store.setTheme(btn.dataset.theme);
-      };
-    });
-    const brandInput = document.getElementById('brand-name-input');
-    if (brandInput) {
-      brandInput.onfocus = () => { container.dataset.isTyping = 'true'; };
-      brandInput.onblur = () => { container.dataset.isTyping = 'false'; };
-      brandInput.oninput = (e) => store.setBrandName(e.target.value);
-    }
-  }, 0);
+  container.innerHTML = `
+    <div style="margin-bottom:20px;">
+        <label class="prop-label">Nome da Marca</label>
+        <input type="text" id="brand-name-input" class="prop-input" value="${state.brandName}" placeholder="Ex: Minha Loja">
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <span style="font-size:12px; font-weight:800; color:#1E293B; text-transform:uppercase; letter-spacing:0.05em;">Visual</span>
+        <span style="font-size:11px; color:#64748B; font-weight:600;">Templates</span>
+    </div>
+    <div id="template-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:24px;"></div>
+    <div style="margin-bottom:8px;">
+        <label class="prop-label">Aparência</label>
+        <div style="display:flex; gap:10px;">
+            <button class="theme-toggle-btn" data-theme="light" style="flex:1; padding:12px; border:1.5px solid ${state.theme === 'light' ? '#4F46E5' : '#F1F5F9'}; border-radius:12px; background:${state.theme === 'light' ? '#EEF2FF' : 'white'}; font-size:13px; font-weight:700; color:${state.theme === 'light' ? '#4F46E5' : '#64748B'}; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;">
+                Claro
+            </button>
+            <button class="theme-toggle-btn" data-theme="dark" style="flex:1; padding:12px; border:1.5px solid ${state.theme === 'dark' ? '#4F46E5' : '#F1F5F9'}; border-radius:12px; background:${state.theme === 'dark' ? '#EEF2FF' : 'white'}; font-size:13px; font-weight:700; color:${state.theme === 'dark' ? '#4F46E5' : '#64748B'}; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;">
+                Escuro
+            </button>
+        </div>
+    </div>
+  `;
 
-  return `
-        <div style="margin-bottom:20px;">
-            <label class="prop-label">Nome da Marca</label>
-            <input type="text" id="brand-name-input" class="prop-input" value="${state.brandName}" placeholder="Ex: Minha Loja">
-        </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-            <span style="font-size:12px; font-weight:800; color:#1E293B; text-transform:uppercase; letter-spacing:0.05em;">Visual</span>
-            <span style="font-size:11px; color:#64748B; font-weight:600;">Templates</span>
-        </div>
-        <div id="template-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:24px;">
-            ${templates.map(t => `
-                <div data-id="${t.id}" style="cursor:pointer; border: 2.5px solid ${state.template === t.id ? '#4F46E5' : '#F1F5F9'}; border-radius:14px; overflow:hidden; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); background: white; transform: ${state.template === t.id ? 'scale(1.02)' : 'scale(1)'}; box-shadow: ${state.template === t.id ? '0 10px 15px -3px rgba(79, 70, 229, 0.1)' : 'none'};">
-                    <div style="height:54px; background: ${t.bg}; position:relative; opacity: ${state.template === t.id ? '1' : '0.8'};">
-                        ${state.template === t.id ? `
-                            <div style="position:absolute; top:6px; right:6px; width:20px; height:20px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#4F46E5; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            </div>
-                        ` : ''}
-                    </div>
-                    <div style="padding:12px 10px;">
-                        <div style="font-size:13px; font-weight:800; color:#1E293B; margin-bottom: 2px;">${t.name}</div>
-                        <div style="font-size:10px; color:#64748B; line-height:1.2; font-weight:600;">${t.desc}</div>
-                    </div>
-                </div>
-            `).join('')}
-        </div>
-        <div style="margin-bottom:8px;">
-            <label class="prop-label">Aparência</label>
-            <div style="display:flex; gap:10px;">
-                <button class="theme-toggle-btn" data-theme="light" style="flex:1; padding:12px; border:1.5px solid ${state.theme === 'light' ? '#4F46E5' : '#F1F5F9'}; border-radius:12px; background:${state.theme === 'light' ? '#EEF2FF' : 'white'}; font-size:13px; font-weight:700; color:${state.theme === 'light' ? '#4F46E5' : '#64748B'}; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                    Claro
-                </button>
-                <button class="theme-toggle-btn" data-theme="dark" style="flex:1; padding:12px; border:1.5px solid ${state.theme === 'dark' ? '#4F46E5' : '#F1F5F9'}; border-radius:12px; background:${state.theme === 'dark' ? '#EEF2FF' : 'white'}; font-size:13px; font-weight:700; color:${state.theme === 'dark' ? '#4F46E5' : '#64748B'}; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                    Escuro
-                </button>
-            </div>
-        </div>
+  const grid = container.querySelector('#template-grid');
+  templates.forEach(t => {
+    const card = document.createElement('div');
+    const isActive = state.template === t.id;
+    card.style.cssText = `cursor:pointer; border: 2.5px solid ${isActive ? '#4F46E5' : '#F1F5F9'}; border-radius:14px; overflow:hidden; transition: all 0.2s; background: white; transform: ${isActive ? 'scale(1.02)' : 'scale(1)'};`;
+    card.innerHTML = `
+      <div style="height:54px; background: ${t.bg}; opacity: ${isActive ? '1' : '0.8'};"></div>
+      <div style="padding:12px 10px;">
+          <div style="font-size:13px; font-weight:800; color:#1E293B;">${t.name}</div>
+          <div style="font-size:10px; color:#64748B; font-weight:600;">${t.desc}</div>
+      </div>
     `;
+    card.onclick = () => store.setTemplate(t.id);
+    grid.appendChild(card);
+  });
+
+  const brandInput = container.querySelector('#brand-name-input');
+  brandInput.oninput = (e) => store.setBrandName(e.target.value);
+  brandInput.onfocus = () => { document.getElementById('properties-content').dataset.isTyping = 'true'; };
+  brandInput.onblur = () => {
+    document.getElementById('properties-content').dataset.isTyping = 'false';
+    renderSidebarList(document.getElementById('properties-content'), store.getState());
+  };
+
+  container.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+    btn.onclick = () => store.setTheme(btn.dataset.theme);
+  });
+
+  return container;
 }
 
 function renderPrivacyEditor(state) {
