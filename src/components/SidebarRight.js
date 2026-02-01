@@ -233,7 +233,6 @@ function createItem(comp, label, iconType, isDraggable, state) {
 
       if (input.type === 'color') {
         input.oninput = (e) => {
-          container.dataset.isTyping = 'true';
           updateHandler(e.target.value, e.target.dataset);
           // Update visual preview immediately
           const preview = e.target.parentElement?.querySelector('.color-preview');
@@ -242,7 +241,6 @@ function createItem(comp, label, iconType, isDraggable, state) {
           if (text) text.textContent = e.target.value;
         };
         input.onchange = (e) => {
-          container.dataset.isTyping = 'false';
           updateHandler(e.target.value, e.target.dataset);
           setTimeout(() => store.notify(), 50);
         };
@@ -449,12 +447,7 @@ function renderContent(comp, label, state) {
       card.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const propsContainer = document.getElementById('properties-content');
-        if (propsContainer) propsContainer.dataset.isTyping = 'true';
         store.updateStyleGuide({ typography: { ...guide.typography, fontFamily: font.name } });
-        setTimeout(() => {
-          if (propsContainer) propsContainer.dataset.isTyping = 'false';
-        }, 100);
       });
 
       fontGrid.appendChild(card);

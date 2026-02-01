@@ -204,6 +204,52 @@ function initTopBar() {
         </head>
         <body>
             ${clone.outerHTML}
+
+            <!-- Alert Modal for Preview -->
+            <div id="custom-alert-modal" class="modal-system-overlay" style="z-index: 40000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center;">
+                <div class="modal-system-card" style="width: 450px; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1);">
+                    <div class="modal-system-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                        <h2 id="alert-title" style="margin:0; font-size: 18px; color: #1E293B;">Visualização</h2>
+                        <button id="btn-close-alert-x" style="background:none; border:none; font-size: 24px; cursor:pointer; color: #94A3B8;">×</button>
+                    </div>
+                    <div class="modal-system-body">
+                        <p id="alert-message" style="font-size: 15px; color:#475569; line-height:1.6; white-space: pre-wrap; margin:0;"></p>
+                    </div>
+                    <div class="modal-system-footer" style="margin-top: 30px;">
+                        <button id="btn-close-alert" style="width: 100%; height: 48px; background: #4F46E5; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer;">Fechar</button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // Initialize Alert
+                const overlay = document.getElementById('custom-alert-modal');
+                const closeX = document.getElementById('btn-close-alert-x');
+                const closeBtn = document.getElementById('btn-close-alert');
+                const titleEl = document.getElementById('alert-title');
+                const msgEl = document.getElementById('alert-message');
+
+                const close = () => { overlay.style.display = 'none'; };
+                if (closeX) closeX.onclick = close;
+                if (closeBtn) closeBtn.onclick = close;
+
+                window.showCustomAlert = (title, message) => {
+                    titleEl.textContent = title;
+                    msgEl.textContent = message;
+                    overlay.style.display = 'flex';
+                };
+
+                // Delegate Privacy Clicks
+                document.body.addEventListener('click', (e) => {
+                    const link = e.target.closest('.privacy-link');
+                    if (link) {
+                        e.preventDefault();
+                        // This logic should match what's in Canvas.js or your store
+                        const mockText = "POLÍTICA DE PRIVACIDADE (PRÉVIA)\\n\\nEste é um exemplo da sua política.";
+                        window.showCustomAlert('Política de Privacidade', mockText);
+                    }
+                });
+            </script>
         </body>
         </html>
       `;
