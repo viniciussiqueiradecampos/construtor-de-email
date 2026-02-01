@@ -31,10 +31,33 @@ function initTopBar() {
   };
 
   if (previewBtn) previewBtn.onclick = () => {
-    document.body.classList.toggle('preview-mode');
-    const isPreview = document.body.classList.contains('preview-mode');
-    previewBtn.classList.toggle('active', isPreview);
+    const modal = document.getElementById('preview-modal');
+    const container = document.getElementById('preview-canvas-container');
+    const currentCanvas = document.querySelector('.canvas-paper');
+
+    if (modal && container && currentCanvas) {
+      container.innerHTML = '';
+      const clone = currentCanvas.cloneNode(true);
+      clone.classList.remove('selected');
+      clone.style.boxShadow = 'none';
+      clone.querySelectorAll('.canvas-item').forEach(item => {
+        item.classList.remove('selected');
+        const actions = item.querySelector('.canvas-actions');
+        if (actions) actions.remove();
+      });
+
+      container.appendChild(clone);
+      modal.style.display = 'flex';
+    }
   };
+
+  const closePreviewBtn = document.getElementById('btn-close-preview');
+  if (closePreviewBtn) {
+    closePreviewBtn.onclick = () => {
+      const modal = document.getElementById('preview-modal');
+      if (modal) modal.style.display = 'none';
+    };
+  }
 
   const brandNameInput = document.getElementById('header-brand-name');
   if (brandNameInput) {
@@ -98,13 +121,6 @@ function initTopBar() {
   if (saveBtn) saveBtn.onclick = () => runSaveFlow(false);
   if (publishBtn) publishBtn.onclick = () => runSaveFlow(true);
 
-  const exitPreviewBtn = document.getElementById('btn-exit-preview');
-  if (exitPreviewBtn) {
-    exitPreviewBtn.onclick = () => {
-      document.body.classList.remove('preview-mode');
-      if (previewBtn) previewBtn.classList.remove('active');
-    };
-  }
 
   // Keep top bar in sync
   appStore.subscribe((state) => {

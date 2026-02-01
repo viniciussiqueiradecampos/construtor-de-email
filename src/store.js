@@ -31,7 +31,7 @@ class Store {
                     id: '5',
                     type: 'button',
                     visible: true,
-                    props: { text: 'ENVIAR', bg: '#8B1E4F' }
+                    props: { text: 'ENVIAR', bg: '' }
                 }
             ],
             selectedId: null,
@@ -157,6 +157,13 @@ class Store {
     setTemplate(templateId) {
         this.saveHistory();
         this.state.template = templateId;
+
+        // Reset component-specific colors to null so template defaults take over
+        this.state.components.forEach(comp => {
+            if (comp.props.color !== undefined) comp.props.color = '';
+            if (comp.props.bg !== undefined) comp.props.bg = '';
+        });
+
         this.notify();
     }
 
