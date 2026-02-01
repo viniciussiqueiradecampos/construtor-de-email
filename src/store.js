@@ -45,6 +45,7 @@ class Store {
             theme: 'light', // 'light', 'dark'
             viewMode: 'desktop', // 'desktop', 'mobile'
             brandName: 'clickmax.io',
+            brandLogo: null,
             styleGuide: {
                 colors: {
                     primary: '#4F46E5',
@@ -79,7 +80,10 @@ class Store {
                 url: '',
                 pageId: '',
                 defaultChecked: true
-            }
+            },
+            productDisplay: 'fixed', // 'fixed', 'popup'
+            popupDelay: 0,
+            formTags: ''
         };
         this.past = [];
         this.future = [];
@@ -224,9 +228,33 @@ class Store {
         this.notify();
     }
 
+    setBrandLogo(logo) {
+        this.saveHistory();
+        this.state.brandLogo = logo;
+        this.notify();
+    }
+
     updatePrivacySettings(newSettings) {
         this.saveHistory();
         this.state.privacySettings = { ...this.state.privacySettings, ...newSettings };
+        this.notify();
+    }
+
+    setProductDisplay(display) {
+        this.saveHistory();
+        this.state.productDisplay = display;
+        this.notify();
+    }
+
+    setFormTags(tags) {
+        this.saveHistory();
+        this.state.formTags = tags;
+        this.notify();
+    }
+
+    setPopupDelay(delay) {
+        this.saveHistory();
+        this.state.popupDelay = parseInt(delay) || 0;
         this.notify();
     }
 

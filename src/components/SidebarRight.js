@@ -36,8 +36,8 @@ function renderSidebarList(container, state) {
   header.style.marginBottom = '16px';
   header.innerHTML = `
     <div style="display:flex; flex-direction:column;">
-        <span style="font-size:11px; color:#94A3B8; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:2px;">Edição</span>
-        <span style="font-size:16px; color:#1E293B; font-weight:800;">Propriedades</span>
+        <span style="font-size:11px; color:#94A3B8; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:2px;">Ajustes</span>
+        <span style="font-size:16px; color:#1E293B; font-weight:800;">Opções do Campo</span>
     </div>
     <button id="btn-add-custom-field-header" style="background: var(--color-brand); color: white; border: none; border-radius: 8px; padding: 8px 12px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -59,7 +59,7 @@ function renderSidebarList(container, state) {
   list.style.paddingBottom = '40px';
 
   // 1. STYLE / TEMPLATE
-  list.appendChild(createItem({ id: 'Estilos' }, 'Estilos', 'palette', false, state));
+  list.appendChild(createItem({ id: 'Estilos' }, 'Configurações', 'palette', false, state));
 
   // Divider
   const hr1 = document.createElement('hr');
@@ -90,7 +90,7 @@ function renderSidebarList(container, state) {
   const footerHr = document.createElement('hr');
   footerHr.style.border = 'none'; footerHr.style.borderTop = '1px solid #F1F5F9'; footerHr.style.margin = '20px 0';
   list.appendChild(footerHr);
-  list.appendChild(createItem({ id: 'Rodapé' }, 'Rodapé', 'field', false, state));
+  list.appendChild(createItem({ id: 'Rodapé' }, 'Avisos Legais', 'field', false, state));
 
   container.appendChild(list);
 }
@@ -107,8 +107,8 @@ function renderStyleGuide(state) {
   header.className = 'sidebar-header-main';
   header.innerHTML = `
     <div style="display:flex; flex-direction:column;">
-        <span style="font-size:11px; color:#94A3B8; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:2px;">Visual</span>
-        <span style="font-size:16px; color:#1E293B; font-weight:800;">Guia de Estilo</span>
+        <span style="font-size:11px; color:#94A3B8; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:2px;">Design</span>
+        <span style="font-size:16px; color:#1E293B; font-weight:800;">Cores e Letras</span>
     </div>
     <div class="header-action-wrapper" style="width:32px; height:32px; display:flex; align-items:center; justify-content:center;">
         <button class="btn-icon-top" style="color: #94A3B8;" onclick="store.setSelected(null)">
@@ -360,16 +360,16 @@ function renderContent(comp, label, state) {
   if (id === 'colors') {
     return `
       <div class="prop-field">
-          <label class="prop-label">Cor Primária</label>
+          <label class="prop-label">Cor dos Botões</label>
           <div class="color-picker-container">
               <div class="color-preview" style="background-color: ${guide.colors?.primary || '#4F46E5'};" onclick="this.nextElementSibling.click()"></div>
               <input type="color" class="prop-input-guide" data-section="colors" data-key="primary" value="${guide.colors?.primary || '#4F46E5'}" style="width:0; height:0; visibility:hidden; padding:0;">
               <span style="font-size:12px; color:#64748B; font-weight:600;">${guide.colors?.primary || '#4F46E5'}</span>
           </div>
-          <p style="font-size:11px; color:#94A3B8; margin-top:4px;">Utilizada em botões principais e destaques.</p>
+          <p style="font-size:11px; color:#94A3B8; margin-top:4px;">Esta é a cor que mais vai aparecer no seu site.</p>
       </div>
       <div class="prop-field">
-          <label class="prop-label">Cor Secundária (Destaque)</label>
+          <label class="prop-label">Cor de Destaque</label>
           <div class="color-picker-container">
               <div class="color-preview" style="background-color: ${guide.colors?.secondary || '#8B5CF6'};" onclick="this.nextElementSibling.click()"></div>
               <input type="color" class="prop-input-guide" data-section="colors" data-key="secondary" value="${guide.colors?.secondary || '#8B5CF6'}" style="width:0; height:0; visibility:hidden; padding:0;">
@@ -378,14 +378,14 @@ function renderContent(comp, label, state) {
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
           <div class="prop-field">
-              <label class="prop-label">Sucesso</label>
+              <label class="prop-label">Deu Certo</label>
               <div class="color-picker-container">
                   <div class="color-preview" style="background-color: ${guide.colors?.success || '#10B981'};" onclick="this.nextElementSibling.click()"></div>
                   <input type="color" class="prop-input-guide" data-section="colors" data-key="success" value="${guide.colors?.success || '#10B981'}" style="width:0; height:0; visibility:hidden; padding:0;">
               </div>
           </div>
           <div class="prop-field">
-              <label class="prop-label">Erro</label>
+              <label class="prop-label">Deu Erro</label>
               <div class="color-picker-container">
                   <div class="color-preview" style="background-color: ${guide.colors?.error || '#EF4444'};" onclick="this.nextElementSibling.click()"></div>
                   <input type="color" class="prop-input-guide" data-section="colors" data-key="error" value="${guide.colors?.error || '#EF4444'}" style="width:0; height:0; visibility:hidden; padding:0;">
@@ -402,8 +402,8 @@ function renderContent(comp, label, state) {
     const fontSection = document.createElement('div');
     fontSection.className = 'prop-field';
     fontSection.innerHTML = `
-      <label class="prop-label">Escolha a Fonte</label>
-      <p style="font-size:11px; color:#94A3B8; margin-bottom:12px;">A fonte que aparecerá em todo o site</p>
+      <label class="prop-label">Escolha o estilo das letras</label>
+      <p style="font-size:11px; color:#94A3B8; margin-bottom:12px;">Isso muda o visual de todos os textos do site.</p>
     `;
 
     const fontGrid = document.createElement('div');
@@ -460,8 +460,8 @@ function renderContent(comp, label, state) {
     const sizeSection = document.createElement('div');
     sizeSection.innerHTML = `
       <div style="margin-bottom: 8px;">
-        <label class="prop-label">Tamanhos de Texto</label>
-        <p style="font-size:11px; color:#94A3B8; margin-top:4px;">Ajuste o tamanho de cada tipo de texto</p>
+        <label class="prop-label">Tamanho das Letras</label>
+        <p style="font-size:11px; color:#94A3B8; margin-top:4px;">Deixe as letras do tamanho que você preferir.</p>
       </div>
     `;
 
@@ -588,8 +588,8 @@ function renderContent(comp, label, state) {
     const spacingTypes = [
       {
         key: 'globalMargin',
-        label: 'Respiro nas Laterais',
-        description: 'Espaço entre o conteúdo e as bordas da tela',
+        label: 'Espaço nas Bordas',
+        description: 'Deixa o conteúdo mais centralizado ou mais espalhado',
         min: 20,
         max: 80,
         default: 40,
@@ -597,8 +597,8 @@ function renderContent(comp, label, state) {
       },
       {
         key: 'blockGap',
-        label: 'Espaço entre Elementos',
-        description: 'Distância vertical entre cada campo do formulário',
+        label: 'Espaço entre Itens',
+        description: 'Distância entre uma pergunta e outra',
         min: 12,
         max: 48,
         default: 24,
@@ -606,8 +606,8 @@ function renderContent(comp, label, state) {
       },
       {
         key: 'columns',
-        label: 'Colunas do Formulário',
-        description: 'Quantas colunas usar para organizar os campos',
+        label: 'Lado a Lado?',
+        description: 'Quantos itens aparecem na mesma linha',
         min: 1,
         max: 3,
         default: 1,
@@ -638,7 +638,7 @@ function renderContent(comp, label, state) {
           <p style="font-size: 11px; color: #94A3B8; margin: 0;">${type.description}</p>
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
-          <span style="font-size: 11px; color: #94A3B8; font-weight: 600;">Menor</span>
+          <span style="font-size: 11px; color: #94A3B8; font-weight: 600;">Menos</span>
           <input 
             type="range" 
             id="slider-spacing-${type.key}"
@@ -647,7 +647,7 @@ function renderContent(comp, label, state) {
             value="${currentValue}"
             style="flex: 1; height: 6px; border-radius: 10px; outline: none; -webkit-appearance: none; background: linear-gradient(to right, var(--color-brand) 0%, var(--color-brand) ${((currentValue - type.min) / (type.max - type.min)) * 100}%, #E2E8F0 ${((currentValue - type.min) / (type.max - type.min)) * 100}%, #E2E8F0 100%);"
           />
-          <span style="font-size: 11px; color: #94A3B8; font-weight: 600;">Maior</span>
+          <span style="font-size: 11px; color: #94A3B8; font-weight: 600;">Mais</span>
           <span id="spacing-value-${type.key}" style="font-size: 14px; font-weight: 800; color: var(--color-brand); min-width: 45px; text-align: right;">${currentValue}${type.isNumber ? '' : 'px'}</span>
         </div>
       `;
@@ -736,7 +736,7 @@ function renderContent(comp, label, state) {
     const container = document.createElement('div');
     container.innerHTML = `
       <div class="prop-field">
-          <label class="prop-label">${isBorder ? 'Estilo de Arredondamento' : 'Intensidade da Sombra'}</label>
+          <label class="prop-label">${isBorder ? 'Redondinho ou Quadrado?' : 'Quanto de Sombra?'}</label>
           <div style="display: grid; grid-template-columns: repeat(${options.length}, 1fr); gap: 8px;">
               ${options.map(opt => {
       const isActive = currentStyle === opt.value;
@@ -762,7 +762,7 @@ function renderContent(comp, label, state) {
                   `;
     }).join('')}
           </div>
-          <p style="font-size:11px; color:#94A3B8; margin-top:8px;">${isBorder ? 'Define o formato dos cantos dos botões e campos.' : 'Define a profundidade visual dos elementos.'}</p>
+          <p style="font-size:11px; color:#94A3B8; margin-top:8px;">${isBorder ? 'Isso muda como os cantos dos itens aparecem.' : 'Isso dá um efeito de profundidade no seu site.'}</p>
       </div>
     `;
 
@@ -823,11 +823,11 @@ function renderContent(comp, label, state) {
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:16px; border-top: 1px solid #F1F5F9;">
             <button class="duplicate-link" style="color: #4F46E5; border:none; background:none; cursor:pointer; font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                Duplicar
+                Fazer Cópia
             </button>
             <button class="delete-link" style="color:#EF4444; border:none; background:none; cursor:pointer; font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                Remover
+                Apagar campo
             </button>
         </div>
     `;
@@ -844,17 +844,99 @@ function renderTemplateSelector(state) {
   ];
 
   container.innerHTML = `
-    <div style="margin-bottom:20px;">
-        <label class="prop-label">Nome da Marca</label>
-        <input type="text" id="brand-name-input" class="prop-input" value="${state.brandName}" placeholder="Ex: Minha Loja">
+    <!-- Seção 1: Identificação Básica -->
+    <div style="margin-bottom:24px; padding:16px; background:#F8FAFC; border-radius:16px; border:1px solid #E2E8F0;">
+        <div style="margin-bottom:16px;">
+            <label class="prop-label" style="display:flex; align-items:center; gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                Nome do formulário
+            </label>
+            <input type="text" id="brand-name-input" class="prop-input" value="${state.brandName}" placeholder="Dê um nome fácil, ex: Cadastro Promo">
+            <p style="font-size:11px; color:#94A3B8; margin-top:6px;">Apenas para sua organização interna.</p>
+        </div>
+
+        <div style="margin-bottom:0;">
+            <label class="prop-label" style="display:flex; align-items:center; gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                Identificador de campanha
+            </label>
+            <div id="tags-pill-container" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
+                ${state.formTags ? state.formTags.split(',').filter(t => t.trim()).map(tag => `
+                    <span style="background:var(--color-brand-light); color:var(--color-brand); font-size:11px; font-weight:800; padding:4px 10px; border-radius:100px; display:flex; align-items:center; gap:6px; border:1px solid rgba(79,70,229,0.1);">
+                        ${tag.trim()}
+                        <svg onclick="window.removeFormTag('${tag.trim()}')" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" style="cursor:pointer; opacity:0.6;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </span>
+                `).join('') : ''}
+            </div>
+            <input type="text" id="form-tags-input" class="prop-input" placeholder="Digite uma tag e aperte Enter">
+            <p style="font-size:11px; color:#94A3B8; margin-top:6px;">Ajuda a saber de onde veio o contato.</p>
+        </div>
     </div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-        <span style="font-size:12px; font-weight:800; color:#1E293B; text-transform:uppercase; letter-spacing:0.05em;">Visual</span>
-        <span style="font-size:11px; color:#64748B; font-weight:600;">Templates</span>
+
+    <!-- Seção 2: Como o produto aparece -->
+    <div style="margin-bottom:24px; padding:16px; border:1px solid #F1F5F9; border-radius:16px;">
+        <label class="prop-label" style="margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            Como ele vai aparecer?
+        </label>
+        <div style="display:flex; gap:10px;">
+            <button class="display-mode-btn" data-mode="fixed" style="flex:1; padding:12px; border:2px solid ${state.productDisplay === 'fixed' ? 'var(--color-brand)' : '#F1F5F9'}; border-radius:12px; background:${state.productDisplay === 'fixed' ? 'var(--color-brand-light)' : 'white'}; font-size:13px; font-weight:800; color:${state.productDisplay === 'fixed' ? 'var(--color-brand)' : '#64748B'}; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; transition:all 0.2s;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+                Fixo na página
+            </button>
+            <button class="display-mode-btn" data-mode="popup" style="flex:1; padding:12px; border:2px solid ${state.productDisplay === 'popup' ? 'var(--color-brand)' : '#F1F5F9'}; border-radius:12px; background:${state.productDisplay === 'popup' ? 'var(--color-brand-light)' : 'white'}; font-size:13px; font-weight:800; color:${state.productDisplay === 'popup' ? 'var(--color-brand)' : '#64748B'}; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; transition:all 0.2s;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M12 5v14M5 12h14"/></svg>
+                Como Popup
+            </button>
+        </div>
+
+        ${state.productDisplay === 'popup' ? `
+            <div style="margin-top:16px; padding:16px; background:#FFFFFF; border-radius:16px; border:1.5px solid #E2E8F0; box-shadow: var(--shadow-sm);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <div style="width:32px; height:32px; background:var(--color-brand-light); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--color-brand);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <span style="font-size:13px; font-weight:800; color:#1E293B;">Aparecer após</span>
+                    </div>
+                    <div style="background:var(--color-brand); color:white; font-size:13px; font-weight:900; padding:4px 12px; border-radius:100px; box-shadow: 0 4px 10px rgba(79,70,229,0.2);">${state.popupDelay} segundos</div>
+                </div>
+                <div style="position:relative; padding:10px 0;">
+                    <input type="range" id="popup-delay-slider" min="0" max="30" step="1" value="${state.popupDelay}" style="width:100%; -webkit-appearance:none; height:6px; background:#E2E8F0; border-radius:10px; outline:none; cursor:pointer;">
+                    <style>
+                        #popup-delay-slider::-webkit-slider-thumb {
+                            -webkit-appearance: none;
+                            width: 20px;
+                            height: 20px;
+                            background: white;
+                            border: 3px solid var(--color-brand);
+                            border-radius: 50%;
+                            cursor: pointer;
+                            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+                            transition: transform 0.2s;
+                        }
+                        #popup-delay-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+                    </style>
+                </div>
+                <p style="font-size:11px; color:#94A3B8; text-align:center; font-weight:600;">O formulário vai "pular" na tela automaticamente.</p>
+            </div>
+        ` : ''}
     </div>
-    <div id="template-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:24px;"></div>
-    <div style="margin-bottom:8px;">
-        <label class="prop-label">Aparência</label>
+
+    <!-- Seção 3: Visual Pronto -->
+    <div style="margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <label class="prop-label" style="margin:0;">Escolha um visual pronto</label>
+            <span style="font-size:10px; font-weight:800; color:white; background:var(--color-brand); padding:2px 8px; border-radius:10px; text-transform:uppercase;">Temas</span>
+        </div>
+        <div id="template-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;"></div>
+    </div>
+
+    <div style="margin-bottom:8px; padding:16px; border:1px solid #F1F5F9; border-radius:16px;">
+        <label class="prop-label" style="margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            Modo de Cor
+        </label>
         <div style="display:flex; gap:10px;">
             <button class="theme-toggle-btn" data-theme="light" style="flex:1; padding:12px; border:1.5px solid ${state.theme === 'light' ? '#4F46E5' : '#F1F5F9'}; border-radius:12px; background:${state.theme === 'light' ? '#EEF2FF' : 'white'}; font-size:13px; font-weight:700; color:${state.theme === 'light' ? '#4F46E5' : '#64748B'}; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;">
                 Claro
@@ -895,6 +977,77 @@ function renderTemplateSelector(state) {
     document.getElementById('properties-content').dataset.isTyping = 'false';
     renderSidebarList(document.getElementById('properties-content'), store.getState());
   };
+
+  const tagsInput = container.querySelector('#form-tags-input');
+  if (tagsInput) {
+    tagsInput.onkeydown = (e) => {
+      if (e.key === 'Enter' && e.target.value.trim()) {
+        e.preventDefault();
+        const currentTags = state.formTags ? state.formTags.split(',') : [];
+        const newTag = e.target.value.trim();
+        if (!currentTags.includes(newTag)) {
+          currentTags.push(newTag);
+          store.setFormTags(currentTags.filter(t => t.trim()).join(','));
+          e.target.value = '';
+          // Force render since we are technically "typing" but hit enter
+          const propsContent = document.getElementById('properties-content');
+          propsContent.dataset.isTyping = 'false';
+          renderSidebarList(propsContent, store.getState());
+        }
+      }
+    };
+    tagsInput.onfocus = () => { document.getElementById('properties-content').dataset.isTyping = 'true'; };
+    tagsInput.onblur = () => {
+      document.getElementById('properties-content').dataset.isTyping = 'false';
+    };
+  }
+
+  window.removeFormTag = (tag) => {
+    const currentTags = store.getState().formTags.split(',');
+    const filtered = currentTags.filter(t => t.trim() !== tag.trim());
+    store.setFormTags(filtered.join(','));
+    renderSidebarList(document.getElementById('properties-content'), store.getState());
+  };
+
+  container.querySelectorAll('.display-mode-btn').forEach(btn => {
+    btn.onclick = () => store.setProductDisplay(btn.dataset.mode);
+  });
+
+  const popupSlider = container.querySelector('#popup-delay-slider');
+  if (popupSlider) {
+    popupSlider.onmousedown = popupSlider.ontouchstart = () => {
+      document.getElementById('properties-content').dataset.isTyping = 'true';
+    };
+
+    popupSlider.oninput = (e) => {
+      const val = e.target.value;
+      const percentage = (val / 30) * 100;
+      e.target.style.background = `linear-gradient(to right, var(--color-brand) 0%, var(--color-brand) ${percentage}%, #E2E8F0 ${percentage}%, #E2E8F0 100%)`;
+
+      store.setPopupDelay(val);
+
+      const card = e.target.closest('div[style*="background:#FFFFFF"]');
+      if (card) {
+        const bubble = card.querySelector('div[style*="background:var(--color-brand)"]');
+        if (bubble) bubble.textContent = val + ' segundos';
+      }
+    };
+
+    popupSlider.onmouseup = popupSlider.ontouchend = popupSlider.onchange = () => {
+      const propsContent = document.getElementById('properties-content');
+      propsContent.dataset.isTyping = 'false';
+      setTimeout(() => {
+        if (propsContent.dataset.isTyping === 'false') {
+          renderSidebarList(propsContent, store.getState());
+        }
+      }, 10);
+    };
+  }
+
+  const logoBtn = container.querySelector('#btn-upload-brand-logo');
+  if (logoBtn) {
+    logoBtn.onclick = () => { if (window.triggerBrandLogoUpload) window.triggerBrandLogoUpload(); };
+  }
 
   container.querySelectorAll('.theme-toggle-btn').forEach(btn => {
     const isThisActive = state.theme === btn.dataset.theme;
@@ -982,39 +1135,39 @@ function getIconSvg(type) {
 
 function getLabel(comp) {
   const labels = {
-    'input_name': 'Nome completo',
-    'input_email': 'E-mail',
-    'input_phone': 'Telefone',
-    'privacy': 'Privacidade',
-    'captcha': 'reCAPTCHA',
-    'title': 'Título',
-    'text': 'Subtítulo',
-    'button': 'Botão Main',
-    'custom_text': 'Campo Customizado',
-    'custom_select': 'Campo Select',
-    'custom_checkbox': 'Campo Checkbox',
-    'custom_radio': 'Campo Radio',
-    'custom_list': 'Campo Lista',
+    'input_name': 'Campo de Nome',
+    'input_email': 'Campo de E-mail',
+    'input_phone': 'Campo de Telefone',
+    'privacy': 'Termos de Uso',
+    'captcha': 'Teste de Robô',
+    'title': 'Título Grande',
+    'text': 'Texto Menor',
+    'button': 'Botão de Envio',
+    'custom_text': 'Pergunta de Texto',
+    'custom_select': 'Escolha uma Opção',
+    'custom_checkbox': 'Várias Opções',
+    'custom_radio': 'Uma Opção Só',
+    'custom_list': 'Lista de Itens',
     // Style Guide Labels
-    'colors': 'Paleta de Cores',
-    'typography': 'Tipografia',
-    'spacing': 'Espaçamento e Grid',
-    'borders': 'Bordas e Formatos',
-    'shadows': 'Sombras e Profundidade',
-    'templates': 'Templates Visuais'
+    'colors': 'Cores do Site',
+    'typography': 'Letras e Tamanhos',
+    'spacing': 'Espaços e Organização',
+    'borders': 'Formatos das Bordas',
+    'shadows': 'Efeitos de Profundidade',
+    'templates': 'Escolha um Visual'
   };
   return labels[comp.type] || labels[comp.id] || capitalize(comp.type?.replace('custom_', '').replace('input_', '') || '');
 }
 
 function getLabelForKey(key, comp = null) {
-  if (comp && comp.type === 'custom_list' && key === 'placeholder') return 'Itens (separados por vírgula)';
+  if (comp && comp.type === 'custom_list' && key === 'placeholder') return 'Escreva os itens (separe por vírgula)';
   const dict = {
-    'text': 'Título',
-    'label': 'Rótulo do Campo',
-    'placeholder': 'Dica (Placeholder)',
-    'src': 'URL da Imagem',
-    'height': 'Altura da Imagem (px)',
-    'name': 'ID Interno (Tag)'
+    'text': 'O que está escrito?',
+    'label': 'Nome que aparece em cima',
+    'placeholder': 'Dica dentro do campo',
+    'src': 'Link da Imagem',
+    'height': 'Altura (em pixels)',
+    'name': 'Nome do dado (interno)'
   };
   return dict[key] || capitalize(key);
 }
@@ -1025,8 +1178,8 @@ function capitalize(str) {
 }
 
 function getPreviewText(comp, state) {
-  if (comp.id === 'Rodapé') return 'Políticas e Termos de Privacidade';
-  if (comp.id === 'Estilos') return state.brandName || 'Identidade Visual';
+  if (comp.id === 'Rodapé') return 'Avisos e Termos do seu Site';
+  if (comp.id === 'Estilos') return state.brandName || 'Sua Marca e Visual';
   if (comp.id === 'colors') return 'Cores Globais do Projeto';
   if (comp.id === 'typography') return 'Estilos de H1, H2 e Parágrafos';
   if (comp.id === 'spacing') return 'Margens e Respiros Globais';

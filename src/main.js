@@ -88,8 +88,8 @@ function initTopBar() {
     if (type === 'save') {
       feedbackSuccess.style.display = 'block';
       feedbackPublish.style.display = 'none';
-      document.getElementById('feedback-title').textContent = 'Alterações Salvas';
-      document.getElementById('feedback-msg').textContent = 'Seu progresso foi guardado com sucesso no sistema.';
+      document.getElementById('feedback-title').textContent = 'Tudo Pronto!';
+      document.getElementById('feedback-msg').textContent = 'Suas mudanças foram guardadas com carinho.';
 
       // Hide view page button for save
       const viewPageBtn = document.getElementById('btn-view-page');
@@ -103,8 +103,8 @@ function initTopBar() {
       const msg = document.getElementById('publish-msg');
 
       if (fill) fill.style.width = '0%';
-      if (title) title.textContent = 'Publicando Projeto';
-      if (msg) msg.textContent = 'Estamos preparando tudo para colocar sua página no ar...';
+      if (title) title.textContent = 'Colocando na Internet...';
+      if (msg) msg.textContent = 'Estamos preparando tudo para o mundo ver sua página!';
 
       let progress = 0;
       const interval = setInterval(() => {
@@ -115,8 +115,8 @@ function initTopBar() {
           setTimeout(() => {
             feedbackPublish.style.display = 'none';
             feedbackSuccess.style.display = 'block';
-            document.getElementById('feedback-title').textContent = 'Publicado com Sucesso!';
-            document.getElementById('feedback-msg').textContent = 'Sua página já está online e pronta para receber visitas.';
+            document.getElementById('feedback-title').textContent = 'Sucesso Total! 🎉';
+            document.getElementById('feedback-msg').textContent = 'Sua página já está na internet! Que tal dar uma olhadinha?';
 
             // Show view page button
             const viewPageBtn = document.getElementById('btn-view-page');
@@ -135,8 +135,8 @@ function initTopBar() {
   if (btnFeedbackClose) {
     btnFeedbackClose.onclick = () => {
       document.getElementById('feedback-overlay').style.display = 'none';
-      document.getElementById('feedback-title').textContent = 'Alterações Salvas';
-      document.getElementById('feedback-msg').textContent = 'Seu progresso foi guardado com sucesso no sistema.';
+      document.getElementById('feedback-title').textContent = 'Tudo Pronto!';
+      document.getElementById('feedback-msg').textContent = 'Suas mudanças foram guardadas com carinho.';
     };
   }
 
@@ -458,6 +458,7 @@ function initTopBar() {
     if (!fileInput) return;
 
     let replaceTargetId = null;
+    let isBrandLogo = false;
 
     fileInput.onchange = (e) => {
       const file = e.target.files[0];
@@ -465,7 +466,10 @@ function initTopBar() {
 
       const reader = new FileReader();
       reader.onload = (event) => {
-        if (replaceTargetId) {
+        if (isBrandLogo) {
+          appStore.setBrandLogo(event.target.result);
+          showToast('Logo atualizado!');
+        } else if (replaceTargetId) {
           appStore.updateComponent(replaceTargetId, { src: event.target.result });
           showToast('Imagem atualizada!');
         } else {
@@ -477,12 +481,20 @@ function initTopBar() {
         }
         fileInput.value = ''; // Reset
         replaceTargetId = null;
+        isBrandLogo = false;
       };
       reader.readAsDataURL(file);
     };
 
     window.triggerImageUpload = (targetId = null) => {
       replaceTargetId = targetId;
+      isBrandLogo = false;
+      fileInput.click();
+    };
+
+    window.triggerBrandLogoUpload = () => {
+      isBrandLogo = true;
+      replaceTargetId = null;
       fileInput.click();
     };
   }
@@ -493,6 +505,17 @@ function initTopBar() {
 
   appStore.subscribe((state) => {
     if (brandNameDisplay && document.activeElement !== brandNameDisplay) brandNameDisplay.textContent = state.brandName;
+    const headerLogo = document.getElementById('header-logo-preview');
+    if (headerLogo) {
+      headerLogo.onclick = () => { if (window.triggerBrandLogoUpload) window.triggerBrandLogoUpload(); };
+      if (state.brandLogo) {
+        headerLogo.style.display = 'flex';
+        headerLogo.style.cursor = 'pointer';
+        headerLogo.innerHTML = `<img src="${state.brandLogo}" style="width:100%; height:100%; object-fit:cover;">`;
+      } else {
+        headerLogo.style.display = 'none';
+      }
+    }
     if (viewDesktop) viewDesktop.classList.toggle('active', state.viewMode === 'desktop');
     if (viewMobile) viewMobile.classList.toggle('active', state.viewMode === 'mobile');
     if (undoBtn) undoBtn.style.opacity = appStore.past.length > 0 ? '1' : '0.4';
