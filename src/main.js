@@ -167,6 +167,17 @@ function initTopBar() {
       clone.querySelectorAll('.canvas-actions').forEach(el => el.remove());
       clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
       clone.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+      clone.querySelectorAll('.canvas-item').forEach(el => el.classList.remove('canvas-item'));
+
+      // Enable inputs for the published version
+      clone.querySelectorAll('input, textarea, select').forEach(el => {
+        el.removeAttribute('readonly');
+        el.removeAttribute('disabled');
+        el.style.pointerEvents = 'auto';
+        if (el.type !== 'checkbox' && el.type !== 'radio') {
+          el.style.cursor = 'text';
+        }
+      });
 
       // 3. Generate Full HTML Document
       const htmlContent = `
