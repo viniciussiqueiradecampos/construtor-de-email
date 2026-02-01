@@ -143,19 +143,32 @@ function initTopBar() {
   // View Page Logic - Generates a preview
   const viewPageBtn = document.getElementById('btn-view-page');
   if (viewPageBtn) {
-    viewPageBtn.onclick = () => {
+    viewPageBtn.onclick = async () => {
       const canvas = document.querySelector('.canvas-paper');
       if (!canvas) return;
 
-      // Clone to clean up
+      // 1. Extract All Styles (Robust for Dev & Prod)
+      let styles = '';
+      Array.from(document.styleSheets).forEach(sheet => {
+        try {
+          // Skip external sheets (CORS) or blob urls if causing issues, but keep local bundled css
+          if (sheet.href && !sheet.href.startsWith(window.location.origin) && !sheet.href.startsWith('blob:')) return;
+          const rules = Array.from(sheet.cssRules || []).map(r => r.cssText).join('\n');
+          styles += rules + '\n';
+        } catch (e) { console.warn('Skipping global sheet', e); }
+      });
+
+      // 2. Clone and Clean Canvas
       const clone = canvas.cloneNode(true);
       clone.classList.remove('selected');
-      clone.style.margin = '40px auto'; // Center nicely
+      clone.style.margin = '40px auto';
+      clone.style.transform = 'none'; // Ensure no scale carries over
       clone.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
       clone.querySelectorAll('.canvas-actions').forEach(el => el.remove());
       clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
       clone.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
 
+      // 3. Generate Full HTML Document
       const htmlContent = `
         <!DOCTYPE html>
         <html lang="pt-BR">
@@ -166,9 +179,27 @@ function initTopBar() {
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-            <link rel="stylesheet" href="${window.location.origin}/src/style.css">
             <style>
-                body { margin: 0; padding: 0; background: #F1F5F9; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; }
+                /* Embedded Styles */
+                ${styles}
+
+                /* Preview Specific Overrides */
+                body { 
+                    margin: 0; 
+                    padding: 40px 0; 
+                    background: #F1F5F9; 
+                    min-height: 100vh; 
+                    display: flex; 
+                    align-items: flex-start; 
+                    justify-content: center; 
+                    overflow-y: auto; 
+                }
+                .canvas-paper {
+                    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1) !important;
+                    margin: 0 auto !important;
+                    width: 100%;
+                    max-width: 1200px; /* Responsive Desktop Constraint */
+                }
             </style>
         </head>
         <body>
@@ -177,7 +208,7 @@ function initTopBar() {
         </html>
       `;
 
-      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       window.open(url, '_blank');
     };
