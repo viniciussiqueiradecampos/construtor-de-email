@@ -233,9 +233,10 @@ function initTopBar() {
                 if (closeX) closeX.onclick = close;
                 if (closeBtn) closeBtn.onclick = close;
 
-                window.showCustomAlert = (title, message) => {
+                window.showCustomAlert = (title, message, isError = false) => {
                     titleEl.textContent = title;
                     msgEl.textContent = message;
+                    titleEl.style.color = isError ? '#EF4444' : '#10B981';
                     overlay.style.display = 'flex';
                 };
 
@@ -244,9 +245,37 @@ function initTopBar() {
                     const link = e.target.closest('.privacy-link');
                     if (link) {
                         e.preventDefault();
-                        // This logic should match what's in Canvas.js or your store
-                        const mockText = "POLÍTICA DE PRIVACIDADE (PRÉVIA)\\n\\nEste é um exemplo da sua política.";
+                        const mockText = "POLÍTICA DE PRIVACIDADE (PRÉVIA)\\n\\nEste é um exemplo da sua política. Ao aceitar, você concorda que seus dados serão processados de acordo com as normas de proteção de dados vigentes.";
                         window.showCustomAlert('Política de Privacidade', mockText);
+                    }
+
+                    const submitBtn = e.target.closest('.btn-submit');
+                    if (submitBtn) {
+                        e.preventDefault();
+                        
+                        // Simple Validation Logic
+                        const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
+                        let hasError = false;
+                        
+                        inputs.forEach(input => {
+                            if (!input.value.trim()) {
+                                hasError = true;
+                                input.style.borderColor = '#EF4444';
+                            } else {
+                                input.style.borderColor = '#E2E8F0';
+                            }
+                        });
+
+                        const checkbox = document.querySelector('input[type="checkbox"]');
+                        if (checkbox && !checkbox.checked) {
+                            hasError = true;
+                        }
+
+                        if (hasError) {
+                            window.showCustomAlert('Ops!', 'Por favor, preencha todos os campos e aceite os termos para continuar.', true);
+                        } else {
+                            window.showCustomAlert('Sucesso!', 'Seus dados foram enviados com sucesso! Entraremos em contato em breve.');
+                        }
                     }
                 });
             </script>
