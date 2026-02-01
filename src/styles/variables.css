@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-bg-dark: #1a1a1a;
+  --color-bg-white: #ffffff;
+  --color-text-primary: #101828;
+  --color-text-secondary: #364153;
+  --color-border: #e5e7eb;
+  
+  /* Font Families */
+  --font-primary: 'Arial', sans-serif; /* Fallback found in design */
+  
+  /* Spacing */
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+}

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Exemplo</title>
+    <link rel="stylesheet" href="/src/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            background: #F8FAFC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .checkout-box {
+            background: white;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            overflow: hidden;
+        }
+
+        .checkout-main {
+            flex: 1;
+            padding: 48px;
+        }
+
+        .checkout-summary {
+            width: 320px;
+            background: #F1F5F9;
+            padding: 48px;
+            border-left: 1px solid #E2E8F0;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748B;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #4F46E5;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1E293B;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .input-mock {
+            width: 100%;
+            padding: 14px;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #1E293B;
+            background: transparent;
+        }
+
+        .btn-pay {
+            width: 100%;
+            padding: 16px;
+            background: #111827;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="checkout-box">
+        <div class="checkout-main">
+            <a href="/" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Voltar para o Construtor
+            </a>
+            <h2>Informações de Pagamento</h2>
+            <div class="field-group">
+                <span class="field-label">Nome no Cartão</span>
+                <div class="input-mock">João da Silva</div>
+            </div>
+            <div class="field-group">
+                <span class="field-label">Número do Cartão</span>
+                <div class="input-mock">**** **** **** 4242</div>
+            </div>
+            <div style="display:flex; gap:20px;">
+                <div class="field-group" style="flex:1;">
+                    <span class="field-label">Validade</span>
+                    <div class="input-mock">12/28</div>
+                </div>
+                <div class="field-group" style="flex:1;">
+                    <span class="field-label">CVV</span>
+                    <div class="input-mock">***</div>
+                </div>
+            </div>
+            <button class="btn-pay">Finalizar Pedido</button>
+        </div>
+        <div class="checkout-summary">
+            <h3 style="font-size:18px; margin-bottom:20px;">Resumo</h3>
+            <div
+                style="display:flex; justify-content:space-between; margin-bottom:12px; color:#64748B; font-weight:500;">
+                <span>Produto X</span>
+                <span>R$ 97,00</span>
+            </div>
+            <div
+                style="display:flex; justify-content:space-between; margin-bottom:12px; color:#64748B; font-weight:500;">
+                <span>Taxas</span>
+                <span>R$ 0,00</span>
+            </div>
+            <hr style="border:none; border-top:1px solid #E2E8F0; margin:20px 0;">
+            <div style="display:flex; justify-content:space-between; font-size:20px; font-weight:800; color:#1E293B;">
+                <span>Total</span>
+                <span>R$ 97,00</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
