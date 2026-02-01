@@ -177,7 +177,7 @@ function createItem(comp, label, iconType, isDraggable, state) {
           </div>
         </div>
         <div style="display:flex; align-items:center; gap:16px; flex-shrink:0; margin-left:10px;">
-          ${comp.type && comp.type !== 'privacy' && comp.type !== 'button' ? `
+          ${comp.type && comp.type !== 'privacy' && comp.type !== 'button' && !['colors', 'typography', 'spacing', 'borders', 'shadows'].includes(comp.id) ? `
             <span class="visibility-toggle" title="Visibilidade" style="cursor:pointer; color: ${isVisible ? '#94A3B8' : '#cbd5e1'}; display:flex; align-items:center; transition: color 0.2s;">
                 ${isVisible ? eyeIcon : eyeOffIcon}
             </span>

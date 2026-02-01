@@ -401,8 +401,18 @@ function renderComponentContent(component, state, tpl) {
                 link.onclick = (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // Execute defined action
-                    try { eval(linkAction); } catch (err) { console.error(err); }
+                    // Direct Action
+                    const setting = state.privacySettings || {};
+                    const source = setting.source || 'text';
+                    if (source === 'url' && setting.url) {
+                        window.open(setting.url, '_blank');
+                    } else if (source === 'page') {
+                        alert(`Na página publicada, isso redirecionará para a página interna: ${setting.pageId}`);
+                    } else {
+                        const mockText = `POLÍTICA DE PRIVACIDADE (MOCK DATA)\n\nEste é um exemplo de como sua política apareceria para o usuário.\n\nDados que coletamos:\n- Informações de contato ([EMAIL_CONTATO])\n- Nome da Empresa ([EMPRESA])\n- Data de Registro ([DATA])\n\nNosso compromisso na [EMPRESA] é manter a transparência e segurança de todos os seus dados.`;
+                        if (window.showCustomAlert) window.showCustomAlert('Política de Privacidade', mockText);
+                        else alert(mockText);
+                    }
                 };
             }
 
