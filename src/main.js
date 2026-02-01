@@ -122,6 +122,54 @@ function initTopBar() {
   if (publishBtn) publishBtn.onclick = () => runSaveFlow(true);
 
 
+  function initPrivacyModal() {
+    const modal = document.getElementById('privacy-modal');
+    const closeBtn = document.getElementById('btn-close-privacy-modal');
+    const saveBtn = document.getElementById('btn-save-privacy-settings');
+    const tabs = document.querySelectorAll('.privacy-tab');
+    const panels = document.querySelectorAll('.privacy-panel');
+    const pageOptions = document.querySelectorAll('.page-option-system');
+
+    let currentSource = 'text';
+    let currentPageId = 'p1';
+
+    if (closeBtn) closeBtn.onclick = () => { modal.style.display = 'none'; };
+
+    tabs.forEach(tab => {
+      tab.onclick = () => {
+        currentSource = tab.dataset.source;
+        tabs.forEach(t => t.classList.toggle('active', t === tab));
+        panels.forEach(p => p.classList.toggle('active', p.id === `privacy-panel-${currentSource}`));
+      };
+    });
+
+    pageOptions.forEach(opt => {
+      opt.onclick = () => {
+        currentPageId = opt.dataset.id;
+        pageOptions.forEach(o => o.classList.toggle('active', o === opt));
+      };
+    });
+
+    if (saveBtn) {
+      saveBtn.onclick = () => {
+        const text = document.getElementById('privacy-text-input').value;
+        const url = document.getElementById('privacy-url-input').value;
+
+        appStore.updatePrivacySettings({
+          source: currentSource,
+          text: text,
+          url: url,
+          pageId: currentPageId
+        });
+
+        modal.style.display = 'none';
+        showToast('Configurações de privacidade salvas!');
+      };
+    }
+  }
+
+  initPrivacyModal();
+
   // Keep top bar in sync
   appStore.subscribe((state) => {
     if (brandNameDisplay && document.activeElement !== brandNameDisplay) {

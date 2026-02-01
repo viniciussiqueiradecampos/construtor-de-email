@@ -143,22 +143,29 @@ function renderComponentContent(component, state, tpl) {
             break;
 
         case 'privacy':
+            const { privacySettings } = state;
             const privGroup = document.createElement('div');
             privGroup.style.display = 'flex';
             privGroup.style.alignItems = 'center';
             privGroup.style.gap = '14px';
             privGroup.style.margin = '14px 0';
+
+            let linkAction = '';
+            if (privacySettings.source === 'url') {
+                linkAction = `window.open('${privacySettings.url}', '_blank')`;
+            } else if (privacySettings.source === 'page') {
+                linkAction = `alert('Abrindo página interna: ${privacySettings.pageId}')`;
+            } else {
+                linkAction = `alert('POLÍTICA DE PRIVACIDADE:\\n\\n${privacySettings.text.replace(/'/g, "\\'")}')`;
+            }
+
             privGroup.innerHTML = `
-                <input type="checkbox" checked disabled style="width:20px; height:20px; accent-color: ${tpl.primary};">
+                <input type="checkbox" ${privacySettings.defaultChecked ? 'checked' : ''} disabled style="width:20px; height:20px; accent-color: ${tpl.primary};">
                 <div style="font-size: 14px; font-weight: 500; color: ${isDark ? '#CBD5E1' : '#475569'}; line-height:1.4;">
                     ${component.props.text} 
-                    <a href="#" class="privacy-link" style="color: ${tpl.primary}; text-decoration:none; font-weight:700; border-bottom:1.5px solid ${tpl.primary}; padding-bottom:1px; margin-left:4px;">(Ler política)</a>
+                    <a href="#" class="privacy-link" onclick="${linkAction}; return false;" style="color: ${tpl.primary}; text-decoration:none; font-weight:700; border-bottom:1.5px solid ${tpl.primary}; padding-bottom:1px; margin-left:4px;">(Ler política)</a>
                 </div>
             `;
-            privGroup.querySelector('.privacy-link').onclick = (e) => {
-                e.preventDefault();
-                alert(`POLÍTICA DE PRIVACIDADE:\n\n${privacyPolicy}`);
-            };
             wrapper.appendChild(privGroup);
             break;
 

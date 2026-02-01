@@ -295,21 +295,64 @@ function renderTemplateSelector(state) {
 }
 
 function renderPrivacyEditor(state) {
+  const { privacySettings } = state;
+
   setTimeout(() => {
-    const textarea = document.getElementById('privacy-policy-input');
-    if (textarea) {
-      textarea.onfocus = () => { container.dataset.isTyping = 'true'; };
-      textarea.onblur = () => { container.dataset.isTyping = 'false'; };
-      textarea.oninput = (e) => store.setPrivacyPolicy(e.target.value);
+    const btnEdit = document.getElementById('btn-open-privacy-editor');
+    if (btnEdit) {
+      btnEdit.onclick = () => {
+        const modal = document.getElementById('privacy-modal');
+        if (modal) {
+          // Pre-fill modal with current state
+          const textarea = document.getElementById('privacy-text-input');
+          const urlInput = document.getElementById('privacy-url-input');
+          if (textarea) textarea.value = privacySettings.text;
+          if (urlInput) urlInput.value = privacySettings.url;
+
+          // Set active tab based on source
+          const tabs = document.querySelectorAll('.privacy-tab');
+          const panels = document.querySelectorAll('.privacy-panel');
+          tabs.forEach(t => {
+            t.classList.toggle('active', t.dataset.source === privacySettings.source);
+          });
+          panels.forEach(p => {
+            p.classList.toggle('active', p.id === `privacy-panel-${privacySettings.source}`);
+          });
+
+          modal.style.display = 'flex';
+        }
+      };
+    }
+
+    const checkDefault = document.getElementById('privacy-default-check');
+    if (checkDefault) {
+      checkDefault.onchange = (e) => {
+        store.updatePrivacySettings({ defaultChecked: e.target.checked });
+      };
     }
   }, 0);
 
   return `
-        <div style="margin-bottom: 12px;">
-            <label class="prop-label">Texto Legal (Política)</label>
-            <textarea id="privacy-policy-input" style="width:100%; min-height:120px; padding: 14px; border: 1.5px solid #E2E8F0; border-radius: 12px; font-size: 13px; font-family:inherit; resize:vertical; outline:none; transition: border-color 0.2s; font-weight:500;">${state.privacyPolicy}</textarea>
+        <div style="margin-bottom: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <label class="prop-label" style="margin:0;">Aceitar políticas de privacidade</label>
+                <div style="display:flex; gap:8px; color:#94A3B8;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </div>
+            </div>
+            
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
+                <input type="checkbox" id="privacy-default-check" ${privacySettings.defaultChecked ? 'checked' : ''} style="width:16px; height:16px; cursor:pointer;">
+                <label for="privacy-default-check" style="font-size:13px; color:#64748B; font-weight:600; cursor:pointer;">Marcado por padrão</label>
+            </div>
+
+            <button id="btn-open-privacy-editor" class="btn-primary-system" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:12px; font-size:14px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Editar Texto Completo
+            </button>
         </div>
-        <div style="font-size:11px; color:#94A3B8; line-height:1.5; font-weight:600;">Este texto será exibido em um pop-up quando o usuário clicar em "Ler política" no checkout.</div>
     `;
 }
 

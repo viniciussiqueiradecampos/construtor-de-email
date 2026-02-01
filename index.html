@@ -143,6 +143,54 @@
       </div>
     </div>
 
+    <!-- Privacy Modal -->
+    <div id="privacy-modal" class="modal-system privacy-modal" style="display:none;">
+      <div class="modal-overlay"></div>
+      <div class="modal-content-system">
+        <div class="modal-header">
+          <h2>Políticas de Privacidade</h2>
+          <button type="button" class="btn-close-modal" id="btn-close-privacy-modal">×</button>
+        </div>
+
+        <div class="privacy-options-tabs">
+          <button type="button" class="privacy-tab active" data-source="text" id="tab-privacy-text">
+            Editor Visual
+          </button>
+          <button type="button" class="privacy-tab" data-source="url" id="tab-privacy-url">
+            Link Externo
+          </button>
+          <button type="button" class="privacy-tab" data-source="page" id="tab-privacy-page">
+            Páginas Internas
+          </button>
+        </div>
+
+        <div class="privacy-body">
+          <div id="privacy-panel-text" class="privacy-panel active">
+            <p class="helper-text">Crie o texto da sua política agora mesmo.</p>
+            <textarea id="privacy-text-input" placeholder="Escreva o conteúdo legal aqui..."></textarea>
+          </div>
+
+          <div id="privacy-panel-url" class="privacy-panel">
+            <p class="helper-text">Cole o link da sua política externa.</p>
+            <input type="text" id="privacy-url-input" placeholder="https://exemplo.com/termos">
+          </div>
+
+          <div id="privacy-panel-page" class="privacy-panel">
+            <p class="helper-text">Escolha uma das páginas existentes.</p>
+            <div class="page-list-system" id="privacy-page-list">
+              <div class="page-option-system active" data-id="p1">📜 Política Padrão</div>
+              <div class="page-option-system" data-id="p2">📄 Termos de Uso</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-primary-system" id="btn-save-privacy-settings"
+            style="width: 100%;">Salvar</button>
+        </div>
+      </div>
+    </div>
+
   </div>
   <script type="module" src="/src/main.js"></script>
 </body>

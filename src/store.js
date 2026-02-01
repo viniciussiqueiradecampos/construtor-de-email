@@ -39,7 +39,13 @@ class Store {
             theme: 'light', // 'light', 'dark'
             viewMode: 'desktop', // 'desktop', 'mobile'
             brandName: 'sdrsoft',
-            privacyPolicy: 'Nossa política de privacidade garante a proteção dos seus dados...'
+            privacySettings: {
+                source: 'text', // 'text', 'url', 'page'
+                text: 'Nossa política de privacidade garante a proteção dos seus dados...',
+                url: '',
+                pageId: '',
+                defaultChecked: true
+            }
         };
         this.past = [];
         this.future = [];
@@ -184,9 +190,9 @@ class Store {
         this.notify();
     }
 
-    setPrivacyPolicy(text) {
+    updatePrivacySettings(newSettings) {
         this.saveHistory();
-        this.state.privacyPolicy = text;
+        this.state.privacySettings = { ...this.state.privacySettings, ...newSettings };
         this.notify();
     }
 
