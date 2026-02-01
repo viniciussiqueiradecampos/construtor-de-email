@@ -7,6 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MBA - IA | Construtor</title>
   <link rel="stylesheet" href="/src/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&display=swap"
+    rel="stylesheet">
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 
@@ -78,10 +83,8 @@
             <circle cx="12" cy="12" r="3"></circle>
           </svg>
         </button>
-        <button class="btn-publish" id="btn-save"
-          style="background:#F1F5F9; color:#475569; box-shadow:none;">Salvar</button>
-        <button class="btn-publish" id="btn-publish-main"
-          style="background: var(--color-brand); color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);">Publicar</button>
+        <button class="btn-save-secondary" id="btn-save">Salvar</button>
+        <button class="btn-publish-main" id="btn-publish-main">Publicar</button>
       </div>
     </header>
 
@@ -97,11 +100,21 @@
 
       <!-- Main Canvas Area -->
       <main class="canvas-area" id="canvas-content">
+        <div class="canvas-guidance-bar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          Dica: Você pode <strong>arrastar</strong> os itens para reordenar ou <strong>clicar</strong> nos botões
+          laterais para adicionar.
+        </div>
         <!-- Canvas wrapper is created by JS as .canvas-paper -->
       </main>
 
       <!-- Sidebar Right: Settings -->
-      <aside class="sidebar sidebar-right" id="sidebar-right">
+      <aside class="sidebar-right" id="sidebar-right">
         <div class="sidebar-content" id="properties-content">
           <!-- Injected via JS -->
         </div>
@@ -125,6 +138,49 @@
       </div>
     </div>
 
+    <!-- Feedback Overlay (Save/Publish) -->
+    <div id="feedback-overlay" class="feedback-overlay">
+      <div id="feedback-card" class="feedback-card">
+        <!-- Success Screen -->
+        <div id="feedback-success-screen" style="display:none;">
+          <div class="feedback-icon-container icon-success-bg">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <h3 id="feedback-title">Alterações Salvas</h3>
+          <p id="feedback-msg">Seu progresso foi guardado com sucesso no sistema.</p>
+          <div style="display: flex; gap: 12px; width: 100%; margin-top: 8px;">
+            <button id="btn-view-page" class="btn-primary-system" style="flex: 1; display: none;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+              Ver Página
+            </button>
+            <button id="btn-feedback-close" class="btn-secondary-system" style="flex: 1;">Entendido</button>
+          </div>
+        </div>
+
+        <!-- Publish Logic -->
+        <div id="feedback-publish-screen" style="display:none;">
+          <div class="feedback-icon-container icon-publish-bg">
+            <lottie-player id="publish-lottie"
+              src="https://lottie.host/68224d03-e83e-4b77-8025-06a9d187768e/vD6I5LghkR.json" background="transparent"
+              speed="1.5" style="width: 100%; height:100%;" loop autoplay></lottie-player>
+          </div>
+          <h3 id="publish-title">Publicando Projeto</h3>
+          <p id="publish-msg">Estamos preparando tudo para colocar sua página no ar...</p>
+          <div class="publish-progress-bar">
+            <div id="publish-progress-fill" class="publish-progress-fill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="toast-container" class="toast-container"></div>
 
     <!-- Preview Modal -->
@@ -143,55 +199,237 @@
       </div>
     </div>
 
-    <!-- Privacy Modal -->
-    <div id="privacy-modal" class="modal-system privacy-modal" style="display:none;">
-      <div class="modal-overlay"></div>
-      <div class="modal-content-system">
-        <div class="modal-header">
-          <h2>Políticas de Privacidade</h2>
-          <button type="button" class="btn-close-modal" id="btn-close-privacy-modal">×</button>
+    <!-- Custom Field Modal -->
+    <div id="custom-field-modal-overlay" class="modal-system-overlay">
+      <div class="modal-system-card" style="width: 500px;">
+        <div class="modal-system-header">
+          <h2>ADICIONAR CAMPO CUSTOMIZADO</h2>
+          <p>Crie novos campos para o seu formulário</p>
+          <button id="btn-close-custom-field-x" class="btn-close-modal-system">×</button>
         </div>
 
-        <div class="privacy-options-tabs">
-          <button type="button" class="privacy-tab active" data-source="text" id="tab-privacy-text">
-            Editor Visual
-          </button>
-          <button type="button" class="privacy-tab" data-source="url" id="tab-privacy-url">
-            Link Externo
-          </button>
-          <button type="button" class="privacy-tab" data-source="page" id="tab-privacy-page">
-            Páginas Internas
-          </button>
+        <div class="modal-system-body">
+          <div style="margin-bottom: 24px;">
+            <label class="prop-label">Tipo de Campo:</label>
+            <div class="custom-field-type-grid">
+              <div class="field-type-card active" data-type="text">
+                <div class="field-type-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M4 7V4h16v3M9 20h6M12 4v16" />
+                  </svg>
+                </div>
+                <span>Texto</span>
+              </div>
+              <div class="field-type-card" data-type="select">
+                <div class="field-type-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="12" y1="3" x2="12" y2="21"></line>
+                    <path d="M12 11l4 4-4 4"></path>
+                  </svg>
+                </div>
+                <span>Select</span>
+              </div>
+              <div class="field-type-card" data-type="checkbox">
+                <div class="field-type-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </div>
+                <span>Check</span>
+              </div>
+              <div class="field-type-card" data-type="radio">
+                <div class="field-type-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </div>
+                <span>Radio</span>
+              </div>
+              <div class="field-type-card" data-type="list">
+                <div class="field-type-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                  </svg>
+                </div>
+                <span>Lista</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label class="prop-label">NOME INTERNO (Tag):</label>
+            <input type="text" id="custom-field-name" class="prop-input" placeholder="Ex: como_conheceu"
+              style="margin-bottom:4px;">
+            <p style="font-size: 11px; color:#94A3B8; font-weight:600;">Identificador único do campo (sem espaços)</p>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label class="prop-label">TÍTULO DO CAMPO (Label):</label>
+            <input type="text" id="custom-field-label" class="prop-input" placeholder="Ex: Como conheceu a gente?">
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label class="prop-label" id="label-placeholder-dynamic">PLACEHOLDER:</label>
+            <input type="text" id="custom-field-placeholder" class="prop-input" placeholder="Ex: Digite aqui...">
+          </div>
+
+          <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+            <input type="checkbox" id="custom-field-required"
+              style="width:18px; height:18px; cursor:pointer; accent-color:#4F46E5;">
+            <label for="custom-field-required"
+              style="font-size:14px; font-weight:700; color:#475569; cursor:pointer;">Campo obrigatório</label>
+          </div>
         </div>
 
-        <div class="privacy-body">
-          <div id="privacy-panel-text" class="privacy-panel active">
-            <p class="helper-text">Crie o texto da sua política agora mesmo.</p>
-            <textarea id="privacy-text-input" placeholder="Escreva o conteúdo legal aqui..."></textarea>
+        <div class="modal-system-footer">
+          <button id="btn-cancel-custom-field" class="btn-cancel-modal">Cancelar</button>
+          <button id="btn-add-custom-field-action" class="btn-save-modal" style="background:#4F46E5;">Adicionar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy Modal Custom -->
+    <div id="privacy-modal-overlay" class="modal-system-overlay">
+      <div class="modal-system-card">
+        <div class="modal-system-header">
+          <h2>Configurar Política de Privacidade</h2>
+          <p>Escolha como o usuário irá visualizar suas políticas</p>
+          <button id="btn-close-privacy-modal-x" class="btn-close-modal-system">×</button>
+        </div>
+
+        <div class="modal-system-body">
+          <div class="privacy-option-list">
+            <!-- Opção 1: Texto Editável -->
+            <div class="privacy-option-card" data-source="text" id="card-privacy-text">
+              <div class="radio-circle"></div>
+              <div class="option-info">
+                <div class="option-primary-text">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                  Texto editável
+                </div>
+                <div class="option-sub-text">Escreva ou cole seu texto diretamente aqui. Ideal para políticas simples e
+                  rápidas.</div>
+              </div>
+            </div>
+
+            <!-- Opção 2: Link Externo -->
+            <div class="privacy-option-card" data-source="url" id="card-privacy-url">
+              <div class="radio-circle"></div>
+              <div class="option-info">
+                <div class="option-primary-text">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                  </svg>
+                  Link externo (URL)
+                </div>
+                <div class="option-sub-text">Redirecione o usuário para uma página de políticas já existente em seu
+                  site.
+                </div>
+              </div>
+            </div>
+
+            <!-- Opção 3: Selecionar Página -->
+            <div class="privacy-option-card active" data-source="page" id="card-privacy-page">
+              <div class="radio-circle"></div>
+              <div class="option-info">
+                <div class="option-primary-text">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                  </svg>
+                  Selecionar página
+                </div>
+                <div class="option-sub-text">Escolha uma página de políticas criada dentro desta ferramenta.</div>
+              </div>
+            </div>
           </div>
 
-          <div id="privacy-panel-url" class="privacy-panel">
-            <p class="helper-text">Cole o link da sua política externa.</p>
-            <input type="text" id="privacy-url-input" placeholder="https://exemplo.com/termos">
+          <!-- Painel Dinâmico: Texto -->
+          <div id="selection-area-text" class="privacy-selection-area">
+            <div class="selection-title">Digite o Conteúdo</div>
+            <textarea id="privacy-text-input-new"
+              style="width: 100%; height: 120px; padding: 16px; border: 1.5px solid #E2E8F0; border-radius: 12px; font-family: inherit; font-size: 14px; resize: none; outline: none;"
+              placeholder="Sua política aqui..."></textarea>
+            <div class="dynamic-vars-container">
+              <div class="dynamic-vars-label">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="M4 7V4h16v3M9 20h6M12 4v16" />
+                </svg>
+                Variáveis dinâmicas
+              </div>
+              <div class="dynamic-vars-list">
+                <span class="var-tag" data-tag="[EMPRESA]">[EMPRESA]</span>
+                <span class="var-tag" data-tag="[DATA]">[DATA]</span>
+                <span class="var-tag" data-tag="[EMAIL_CONTATO]">[EMAIL_CONTATO]</span>
+              </div>
+            </div>
           </div>
 
-          <div id="privacy-panel-page" class="privacy-panel">
-            <p class="helper-text">Escolha uma das páginas existentes.</p>
-            <div class="page-list-system" id="privacy-page-list">
-              <div class="page-option-system active" data-id="p1">📜 Política Padrão</div>
-              <div class="page-option-system" data-id="p2">📄 Termos de Uso</div>
+          <!-- Painel Dinâmico: URL -->
+          <div id="selection-area-url" class="privacy-selection-area">
+            <div class="selection-title">Link da Política</div>
+            <input type="text" id="privacy-url-input-new"
+              style="width: 100%; padding: 14px; border: 1.5px solid #E2E8F0; border-radius: 12px; font-size: 14px; outline: none;"
+              placeholder="https://seusite.com/termos-de-uso">
+          </div>
+
+          <!-- Painel Dinâmico: Páginas -->
+          <div id="selection-area-page" class="privacy-selection-area active">
+            <div class="selection-title">Selecione uma Página</div>
+            <div class="page-item-list" id="privacy-page-item-list">
+              <div class="page-item" data-id="p1">Política de Privacidade Padrão</div>
+              <div class="page-item selected" data-id="p2">Termos de Uso e Condições</div>
+              <div class="page-item" data-id="p3">Política de Cookies</div>
+              <div class="page-item" data-id="p4">Aviso Legal</div>
             </div>
           </div>
         </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn-primary-system" id="btn-save-privacy-settings"
-            style="width: 100%;">Salvar</button>
+        <div class="modal-system-footer">
+          <button id="btn-cancel-privacy" class="btn-cancel-modal">Cancelar</button>
+          <button id="btn-save-privacy-new" class="btn-save-modal">Salvar Alterações</button>
         </div>
       </div>
     </div>
 
   </div>
+  <!-- Custom Alert Modal (System Standard) -->
+  <div id="custom-alert-modal" class="modal-system-overlay" style="z-index: 40000;">
+    <div class="modal-system-card" style="width: 450px;">
+      <div class="modal-system-header">
+        <h2 id="alert-title">Visualização</h2>
+        <button id="btn-close-alert-x" class="btn-close-modal-system">×</button>
+      </div>
+      <div class="modal-system-body">
+        <p id="alert-message" style="font-size: 15px; color:#475569; line-height:1.6; white-space: pre-wrap;"></p>
+      </div>
+      <div class="modal-system-footer">
+        <button id="btn-close-alert" class="btn-save-modal" style="width: 100%;">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="image-upload-input" accept="image/*"
+    style="display:none; visibility:hidden; width:0; height:0;">
   <script type="module" src="/src/main.js"></script>
 </body>
 

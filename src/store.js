@@ -28,6 +28,12 @@ class Store {
                     props: { label: 'E-mail', placeholder: 'Digite seu e-mail...' }
                 },
                 {
+                    id: 'privacy-fixed',
+                    type: 'privacy',
+                    visible: true,
+                    props: { text: 'Eu aceito os termos de privacidade' }
+                },
+                {
                     id: '5',
                     type: 'button',
                     visible: true,
@@ -38,7 +44,35 @@ class Store {
             template: 'moderno', // 'moderno', 'minimalista', 'vibrante', 'elegante', 'tech'
             theme: 'light', // 'light', 'dark'
             viewMode: 'desktop', // 'desktop', 'mobile'
-            brandName: 'sdrsoft',
+            brandName: 'clickmax.io',
+            styleGuide: {
+                colors: {
+                    primary: '#4F46E5',
+                    secondary: '#8B5CF6',
+                    neutralBg: '#F8FAFC',
+                    neutralText: '#1E293B',
+                    success: '#10B981',
+                    error: '#EF4444'
+                },
+                typography: {
+                    fontFamily: 'Plus Jakarta Sans',
+                    h1: { size: '32px', weight: '800', spacing: '-0.02em' },
+                    h2: { size: '24px', weight: '700', spacing: '-0.01em' },
+                    h3: { size: '20px', weight: '600', spacing: '0' },
+                    body: { size: '15px', weight: '500', spacing: '0' },
+                    legend: { size: '12px', weight: '500', spacing: '0' }
+                },
+                interactive: {
+                    borderRadius: '12px',
+                    style: 'soft', // 'round', 'square', 'soft'
+                    shadow: 'medium' // 'none', 'soft', 'medium', 'hard'
+                },
+                spacing: {
+                    globalMargin: '40px',
+                    blockGap: '24px'
+                }
+            },
+            activeTab: 'builder', // 'builder', 'styleguide'
             privacySettings: {
                 source: 'text', // 'text', 'url', 'page'
                 text: 'Nossa política de privacidade garante a proteção dos seus dados...',
@@ -92,14 +126,14 @@ class Store {
 
     // --- Actions ---
 
-    addComponent(type) {
+    addComponent(type, customProps = null) {
         this.saveHistory();
         const id = Date.now().toString();
         const newComponent = {
             id,
             type,
             visible: true,
-            props: this.getDefaultProps(type)
+            props: customProps || this.getDefaultProps(type)
         };
         this.state.components.push(newComponent);
         this.state.selectedId = id;
@@ -196,19 +230,42 @@ class Store {
         this.notify();
     }
 
+    updateStyleGuide(newGuide) {
+        this.saveHistory();
+        this.state.styleGuide = {
+            ...this.state.styleGuide,
+            ...newGuide,
+            colors: { ...this.state.styleGuide.colors, ...(newGuide.colors || {}) },
+            typography: { ...this.state.styleGuide.typography, ...(newGuide.typography || {}) },
+            interactive: { ...this.state.styleGuide.interactive, ...(newGuide.interactive || {}) },
+            spacing: { ...this.state.styleGuide.spacing, ...(newGuide.spacing || {}) }
+        };
+        this.notify();
+    }
+
+    setActiveTab(tab) {
+        this.state.activeTab = tab;
+        this.notify();
+    }
+
     getDefaultProps(type) {
         switch (type) {
             case 'privacy': return { text: 'Eu aceito os termos de privacidade' };
             case 'captcha': return { label: 'Verificação de robô' };
             case 'title': return { text: 'Novo Título', color: '' };
             case 'text': return { text: 'Novo parágrafo de texto.', color: '' };
-            case 'image': return { src: 'https://via.placeholder.com/600x400', alt: 'Imagem' };
+            case 'image': return { src: 'https://via.placeholder.com/600x400', alt: 'Imagem', height: 'auto' };
             case 'input_name': return { label: 'Nome Completo', placeholder: 'Ex: João Silva' };
             case 'input_email': return { label: 'E-mail', placeholder: 'exemplo@email.com' };
             case 'input_phone': return { label: 'Telefone', placeholder: '(00) 00000-0000' };
             case 'divisor': return { color: '#E5E7EB', thickness: '1px' };
             case 'espaco': return { size: '24px' };
             case 'button': return { text: 'ENVIAR', bg: '#8B1E4F' };
+            case 'custom_text': return { label: 'Campo de Texto', placeholder: 'Digite aqui...', name: 'campo_texto' };
+            case 'custom_select': return { label: 'Seleção', placeholder: 'Opção 1, Opção 2', name: 'campo_select' };
+            case 'custom_checkbox': return { label: 'Checklist', placeholder: 'Opção 1, Opção 2', name: 'campo_checkbox' };
+            case 'custom_radio': return { label: 'Opções', placeholder: 'Opção 1, Opção 2', name: 'campo_radio' };
+            case 'custom_list': return { label: 'Lista', placeholder: 'Opção 1, Opção 2', name: 'campo_lista' };
             default: return {};
         }
     }
