@@ -72,8 +72,15 @@ function initTopBar() {
     }, 1800);
   };
 
-  if (saveBtn) saveBtn.onclick = () => runSaveFlow(false);
   if (publishBtn) publishBtn.onclick = () => runSaveFlow(true);
+
+  const exitPreviewBtn = document.getElementById('btn-exit-preview');
+  if (exitPreviewBtn) {
+    exitPreviewBtn.onclick = () => {
+      document.body.classList.remove('preview-mode');
+      if (previewBtn) previewBtn.classList.remove('active');
+    };
+  }
 
   // Keep top bar in sync
   appStore.subscribe((state) => {

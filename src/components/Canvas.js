@@ -101,8 +101,11 @@ function renderComponentContent(component, state, tpl) {
             const h1 = document.createElement('h1');
             h1.className = 'h1-brand';
             h1.textContent = component.props.text;
-            // Use component color if defined, otherwise template/theme default
-            h1.style.color = component.props.color || (isDark ? '#FFFFFF' : (state.template === 'minimalista' ? '#000000' : '#1E293B'));
+            // Template primary color for titles if it's not the minimalist one
+            const defaultTitleColor = state.template === 'minimalista'
+                ? (isDark ? '#FFFFFF' : '#000000')
+                : (isDark ? '#FFFFFF' : tpl.primary);
+            h1.style.color = component.props.color || defaultTitleColor;
             wrapper.appendChild(h1);
             break;
 
